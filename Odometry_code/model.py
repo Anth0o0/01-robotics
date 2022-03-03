@@ -38,7 +38,10 @@ class Model(object):
             self.acc, self.speed_acc, self.mode
         )
         return s
-
+#da = m2_speed
+#db = m1_speed
+#dp = linear_speed
+#dteta = rotation_speed 
     def ik(self, linear_speed, rotational_speed):
         """Given the linear speed and the rotational speed, 
         returns the speed of the wheels in a differential wheeled robot
@@ -50,8 +53,8 @@ class Model(object):
         Returns:
             float -- Speed of motor1 (m/s), speech of motor2 (m/s)
         """
-        # TODO
-        m1_speed = linear_speed + rotational_speed * (self.l/2)
+        # TODO 1 
+        m1_speed= linear_speed + rotational_speed * (self.l/2)
         m2_speed = linear_speed + rotational_speed * (self.l/2)
         return m1_speed, m2_speed
 
@@ -66,9 +69,10 @@ class Model(object):
         Returns:
             float -- linear speed (m/s), rotational speed (rad/s)
         """
-        # TODO
-        linear_speed = m1_speed + m2_speed
-        rotation_speed = (2*m1_speed)/L
+        # TODO 
+        # inverse de la question 1
+        linear_speed = (self.m1.speed + self.m2.speed)/2
+        rotation_speed = (self.m1.speed - self.m2.speed)/self.l
         return linear_speed, rotation_speed
 
     def update(self, dt):
@@ -80,11 +84,15 @@ class Model(object):
             dt {float} -- Travel time in seconds
         """
         # Going from wheel speeds to robot speed
-        linear_speed, rotation_speed = self.dk()
+        linear_speed, rotation_speed = self.dk(self.m1.speed, self.m2.speed)
 
-        # TODO
-        dxr = (linear_speed/rotation_speed)*math.sin(rotation_speed)
-        dyr = (linear_speed/rotation_speed) * (1-math.cos(rotation_speed))
+        # TODO q3
+        if rotation_speed ==0 :
+            dxr = 0
+            dyr = 0
+        else :
+            dxr = (linear_speed/rotation_speed)*math.sin(rotation_speed)
+            dyr = (linear_speed/rotation_speed) * (1-math.cos(rotation_speed))
 
         # Updating the robot position
         self.x = self.x + dxr * math.cos(rotation_speed)-dyr * math.sin(rotation_speed) # TODO
