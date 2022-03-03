@@ -87,15 +87,17 @@ class Model(object):
         linear_speed, rotation_speed = self.dk(self.m1.speed, self.m2.speed)
 
         # TODO q3
+        dp = linear_speed * dt
+        d_theta = rotation_speed * dt
         if rotation_speed ==0 :
-            dxr = 0
+            dxr = dp
             dyr = 0
         else :
-            dxr = (linear_speed/rotation_speed)*math.sin(rotation_speed)
-            dyr = (linear_speed/rotation_speed) * (1-math.cos(rotation_speed))
+            dxr = (dp/d_theta)* math.sin(d_theta)
+            dyr = (dp/d_theta) * (1-math.cos(d_theta))
 
         # Updating the robot position
-        self.x = self.x + dxr * math.cos(rotation_speed)-dyr * math.sin(rotation_speed) # TODO
-        self.y = self.y + dxr * math.cos(rotation_speed) + dyr * math.cos(rotation_speed) # TODO
-        self.theta = self.theta + rotation_speed
+        self.x = self.x + dxr * math.cos(self.theta)-dyr * math.sin(self.theta) # TODO
+        self.y = self.y + dxr * math.cos(self.theta) + dyr * math.cos(self.theta) # TODO
+        self.theta = self.theta + d_theta
 
